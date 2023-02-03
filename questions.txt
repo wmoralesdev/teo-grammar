@@ -1,0 +1,4 @@
+1. Como poner comentarios para que vayan al inicio de la funcion unicamente
+2. Cual es la diferencia entre termino, factor y expresion
+    2.1 Cuando usar cada uno
+3. Como establecer la operacion aritmetica para que tenga recursion

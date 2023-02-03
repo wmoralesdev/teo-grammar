@@ -1,0 +1,35 @@
+function addnumbers(num_1: int, num_2: int): int {
+    return num_1 + num_2;
+}
+
+function main(): int {
+	const number_1: int = 20;
+	const search: color = red;
+	var direction_1: direction = front, direction_2: direction = back,
+		direction_3: direction = left, direction_4: direction = right;
+
+	if (search == red) {
+		move(direction_1, number_1);
+
+		var number_2 = 30;
+
+		move(direction_2, addnumbers(number_1, number_2));
+
+		var number_3 = addnumbers(number_1, number_2)
+
+		while (number_3 > 0) {
+			move(direction_3, number_3);
+
+			number_3 = number_3 - 1;
+		}
+	}
+
+	if (direction_4 == right) {
+		move(direction_1, 10);
+	}
+	else {
+		move(direction_2, 20);
+	}
+
+	return 0;
+}

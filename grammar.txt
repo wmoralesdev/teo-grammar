@@ -1,0 +1,112 @@
+S -> <FUNCTION> <MAIN>
+
+FUNCTION ->
+<COMMENT> function <IDENTIFIER> (<ARGUMENTS>):<DATATYPE> { <BLOCK> } <FUNCTION> | ^
+
+MAIN ->
+<COMMENT> function main (): int { <BLOCK> }
+
+ARGUMENTS ->
+<IDENTIFIER>: <DATATYPE> | <IDENTIFIER>: <DATATYPE>, <ARGUMENTS> | ^
+
+PARAMS ->
+<EXPRESSION> | <EXPRESSION>, <PARAMS> | ^
+
+RETURN ->
+return <EXPRESSION>; | return void;
+
+NUMBER (regex) ->
+[0-9]+
+
+STRING (regex) ->
+[A-Za-z]+
+
+IDENTIFIER (regex) ->
+[A-Za-z]+[_[0-9]+]*
+
+DATATYPE ->
+int | float | bool | color | string | direction | void
+
+CONST_DECLARATION
+const <VAR_DECLARATION_LIST>;
+
+VAR_DECLARATION ->
+var <VAR_DECLARATION_LIST>;
+
+NOTE: All variables need to be initialized with a default value 
+VAR_DECLARATION_LIST ->
+<VAR_DECLARATION_INIT> | <VAR_DECLARATION_INIT>, <VAR_DECLARATION_LIST>
+
+VAR_DECLARATION_INIT ->
+<IDENTIFIER>: <DATATYPE> = <EXPRESSION>
+
+INTEGER ->
+<NUMBER>
+
+FLOAT ->
+<NUMBER>.<NUMBER>
+
+BOOLEAN ->
+true | false
+
+COLOR ->
+red | green | blue
+
+COMMENT (regex? al inicio de linea) ->
+# <STRING> | ^
+
+DIRECTION ->
+left | right | front | back
+
+MOVE (builtin function that receives direction and ms) o DIRECTION ->
+move((<DIRECTION> | <IDENTIFIER>), <NUMBER>)
+
+IS_CLEAR (builtin function that receives direction to check) ->
+is_clear((<DIRECTION> | <IDENTIFIER>))
+
+NOTE: What should be a term and what should be a factor
+TERM ->
+<INTEGER> | <FLOAT> | <BOOLEAN> | <DIRECTION> | <COLOR> | <IDENTIFIER> | <INVOKE>
+
+FACTOR ->
+
+INVOKE
+invoke <IDENTIFIER>(<PARAMS>)
+
+RELATION_OPERATOR
+<= | >= | < | > | == | !=
+
+SUM_OPERATOR
++ | -
+
+MULTIPLICATION_OPERATOR
+/ | * | %
+
+EXPRESSION
+<CONDITIONAL_EXPRESSION> | <ARITHMETIC_EXPRESSION> | <TERM>
+
+NOTE: Separar a solo posibilidad de comparacion
+CONDITIONAL_EXPRESSION (TERMINO ?)
+<FACTOR> <RELATION_OPERATOR> <FACTOR> | (<CONDITIONAL_EXPRESSION> || <CONDITIONAL_EXPRESSION>) | (<CONDITIONAL_EXPRESSION> && <CONDITIONAL_EXPRESSION>)
+
+ARITHMETIC_EXPRESSION
+<TERM> <SUM_OPERATOR> <TERM> | <TERM> <SUM_OPERATOR> <ARITHMETIC_EXPRESSION> | ^
+
+BLOCK
+<STATEMENT>
+
+STATEMENT
+<COMMENT> | <ASSIGNMENT_STMT>; <STATEMENT> | <CONDITIONAL_STMT> <STATEMENT> | <ITERATION_STMT> <STATEMENT> | <INVOKE_STMT>; <STATEMENT> | <RETURN> | ^
+
+IF_CONDITIONAL_STMT
+if (<CONDITIONAL_EXPRESSION>) { <BLOCK> }
+
+CONDITIONAL_STMT (considerar produccion a la hora de norm)
+<IF_CONDITIONAL_STMT> | IF_CONDITIONAL_STMT else { <BLOCK> }
+
+NOTE: No sabemos que es term y factor, o expression
+ASSIGNMENT_STMT (corregir)
+<IDENTIFIER> = <TERM>; (?)
+
+ITERATION_STMT
+while (<CONDITIONAL_EXPRESSION>) { <BLOCK> }
