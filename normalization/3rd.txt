@@ -1,0 +1,239 @@
+S' -> <FUNCTION> <MAIN> | ^
+S -> <FUNCTION> <MAIN>
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+FUNCTION ->
+function <IDENTIFIER> (<ARGUMENTS>) :<DATATYPE> { <STATEMENT> } <FUNCTION>  |
+function <IDENTIFIER> ()            :<DATATYPE> { <STATEMENT> } <FUNCTION>  |
+function <IDENTIFIER> (<ARGUMENTS>) :<DATATYPE> { <STATEMENT> }             |
+function <IDENTIFIER> ()            :<DATATYPE> { <STATEMENT> }
+
+MAIN ->
+function main (): int { <STATEMENT> }
+
+ARGUMENTS ->
+<IDENTIFIER>: <DATATYPE> |
+<IDENTIFIER>: <DATATYPE>, <ARGUMENTS>
+
+PARAMS ->
+<EXPRESSION> |
+<EXPRESSION>, <PARAMS>
+
+RETURN ->
+return <EXPRESSION>;
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+NUMBER (regex) ->
+[0-9]+
+
+IDENTIFIER (regex python, any identifier with get_number_01)
+- must start with any alphabetic string
+- can have after string a <_alphastring> subpattern
+- must end with <_01> pattern or nothing (previous condition) ->
+^[A-Za-z]+(?:[_][A-Za-z]+)*(?:[_][0-9]+)*$
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+DATATYPE ->
+int | float | bool | color | string | direction | void
+
+INTEGER ->
+[0-9]+
+
+FLOAT ->
+[0-9]+.[0-9]+
+
+BOOLEAN ->
+true | false
+
+COLOR ->
+red | green | blue
+
+DIRECTION ->
+left | right | front | back
+
+INVOKE ->
+invoke <IDENTIFIER>(<PARAMS>); |
+invoke <IDENTIFIER>();
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+CONST_DECLARATION ->
+const <CONST_DECLARATION_LIST>;
+
+CONST_DECLARATION_LIST ->
+<IDENTIFIER>: <DATATYPE> = <EXPRESSION> |
+<CONST_DECLARATION_INIT>, <CONST_DECLARATION_LIST>
+
+CONST_DECLARATION_INIT ->
+<IDENTIFIER>: <DATATYPE> = <EXPRESSION>
+
+VAR_DECLARATION ->
+var <VAR_DECLARATION_LIST>;
+
+VAR_DECLARATION_LIST ->
+<IDENTIFIER>: <DATATYPE> = <EXPRESSION>     |
+<IDENTIFIER>: <DATATYPE>                    |
+<VAR_DECLARATION_INIT>, <VAR_DECLARATION_LIST>
+
+VAR_DECLARATION_INIT ->
+<IDENTIFIER>: <DATATYPE> = <EXPRESSION> |
+<IDENTIFIER>: <DATATYPE>
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+MOVE (builtin function that receives direction and ms) o DIRECTION ->
+invoke move(<EXPRESSION>, <EXPRESSION>);
+
+IS_CLEAR (builtin function that receives direction to check) ->
+invoke is_clear(<EXPRESSION>, <EXPRESSION>);
+
+GET_COLOR ->
+invoke get_color();
+
+BUILTIN_FUNCTION ->
+invoke move(<EXPRESSION>, <EXPRESSION>);        |
+invoke is_clear(<EXPRESSION>, <EXPRESSION>);    |
+invoke get_color();
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+TERM ->
+<SUM_OPERATOR> <INTEGER>                    |
+<SUM_OPERATOR> <FLOAT>                      |
+<SUM_OPERATOR> <IDENTIFIER>                 |
+<SUM_OPERATOR> <INVOKE>                     |
+<SUM_OPERATOR> (<ARITHMETIC_EXPRESSION>)    |
+[0-9]+                                      |
+[0-9]+.[0-9]+                               |
+^[A-Za-z]+(?:[_][A-Za-z]+)*(?:[_][0-9]+)*$  |
+invoke <IDENTIFIER>(<PARAMS>);              |
+invoke <IDENTIFIER>();                      |
+(<ARITHMETIC_EXPRESSION>)                   |
+<FACTOR> <MULTIPLICATION_OPERATOR> <FACTOR>
+
+FACTOR ->
+<SUM_OPERATOR> <INTEGER>                    |
+<SUM_OPERATOR> <FLOAT>                      |
+<SUM_OPERATOR> <IDENTIFIER>                 |
+<SUM_OPERATOR> <INVOKE>                     |
+<SUM_OPERATOR> (<ARITHMETIC_EXPRESSION>)    |
+[0-9]+                                      |
+[0-9]+.[0-9]+                               |
+^[A-Za-z]+(?:[_][A-Za-z]+)*(?:[_][0-9]+)*$  |
+invoke <IDENTIFIER>(<PARAMS>);              |
+invoke <IDENTIFIER>();                      |
+(<ARITHMETIC_EXPRESSION>)                   |
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+EXPRESSION ->
+<TERM> <RELATION_OPERATOR> <TERM>                           |
+<RELATIONAL_EXPRESSION> || <RELATIONAL_EXPRESSION>          |
+<OR_CONDITIONAL_EXPRESSION> && <OR_CONDITIONAL_EXPRESSION>  |
+<SUM_OPERATOR> <INTEGER>                                    |
+<SUM_OPERATOR> <FLOAT>                                      |
+<SUM_OPERATOR> <IDENTIFIER>                                 |
+<SUM_OPERATOR> <INVOKE>                                     |
+<SUM_OPERATOR> (<ARITHMETIC_EXPRESSION>)                    |
+[0-9]+                                                      |
+[0-9]+.[0-9]+                                               |
+^[A-Za-z]+(?:[_][A-Za-z]+)*(?:[_][0-9]+)*$                  |
+invoke <IDENTIFIER>(<PARAMS>);                              |
+invoke <IDENTIFIER>();                                      |
+(<ARITHMETIC_EXPRESSION>)                                   |
+<FACTOR> <MULTIPLICATION_OPERATOR> <FACTOR>                 |
+<TERM> <SUM_OPERATOR> <TERM>                                |
+left                                                        |
+right                                                       |
+front                                                       |
+back                                                        |
+red                                                         |
+green                                                       |
+blue
+
+ARITHMETIC_EXPRESSION ->
+<SUM_OPERATOR> <INTEGER>                    |
+<SUM_OPERATOR> <FLOAT>                      |
+<SUM_OPERATOR> <IDENTIFIER>                 |
+<SUM_OPERATOR> <INVOKE>                     |
+<SUM_OPERATOR> (<ARITHMETIC_EXPRESSION>)    |
+[0-9]+                                      |
+[0-9]+.[0-9]+                               |
+^[A-Za-z]+(?:[_][A-Za-z]+)*(?:[_][0-9]+)*$  |
+invoke <IDENTIFIER>(<PARAMS>);              |
+invoke <IDENTIFIER>();                      |
+(<ARITHMETIC_EXPRESSION>)                   |
+<FACTOR> <MULTIPLICATION_OPERATOR> <FACTOR> |
+<TERM> <SUM_OPERATOR> <TERM>
+
+RELATIONAL_EXPRESSION ->
+<TERM> <RELATION_OPERATOR> <TERM> 
+
+OR_CONDITIONAL_EXPRESSION ->
+<TERM> <RELATION_OPERATOR> <TERM> |
+<RELATIONAL_EXPRESSION> || <RELATIONAL_EXPRESSION>
+
+CONDITIONAL_EXPRESSION ->
+<TERM> <RELATION_OPERATOR> <TERM>                   |
+<RELATIONAL_EXPRESSION> || <RELATIONAL_EXPRESSION>  |
+<OR_CONDITIONAL_EXPRESSION> && <OR_CONDITIONAL_EXPRESSION>
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+RELATION_OPERATOR ->
+<= | >= | < | > | == | !=
+
+SUM_OPERATOR ->
++ | -
+
+MULTIPLICATION_OPERATOR ->
+/ | * | %
+
+CONDITIONAL_OPERATOR ->
+|| | &&
+
+---------------------------------------------------------------------------------------------------------------------------------------------------
+
+STATEMENT ->
+<DECLARATION_STMT> <STATEMENT>                      |
+var <VAR_DECLARATION_LIST>;                         |
+const <CONST_DECLARATION_LIST>;                     |
+<ASSIGNMENT_STMT> <STATEMENT>                       |
+<IDENTIFIER> = <EXPRESSION>;                        |
+<CONDITIONAL_STMT> <STATEMENT>                      |
+if (<CONDITIONAL_EXPRESSION>) { <STATEMENT> }       |
+<IF_CONDITIONAL_STMT> else { <STATEMENT> }          |
+<ITERATION_STMT> <STATEMENT>                        |
+while (<CONDITIONAL_EXPRESSION>) { <STATEMENT> }    |
+<INVOKE> <STATEMENT>                                |
+invoke <IDENTIFIER>(<PARAMS>);                      |
+invoke <IDENTIFIER>();                              |
+<BUILTIN_FUNCTION> <STATEMENT>                      |
+invoke move(<EXPRESSION>, <EXPRESSION>);            |
+invoke is_clear(<EXPRESSION>, <EXPRESSION>);        |
+invoke get_color();                                 |
+<RETURN> <STATEMENT>                                |
+return <EXPRESSION>;                                |
+
+IF_CONDITIONAL_STMT ->
+if (<CONDITIONAL_EXPRESSION>) { <STATEMENT> }
+
+DECLARATION_STMT
+var <VAR_DECLARATION_LIST>; |
+const <CONST_DECLARATION_LIST>;
+
+CONDITIONAL_STMT ->
+if (<CONDITIONAL_EXPRESSION>) { <STATEMENT> } |
+<IF_CONDITIONAL_STMT> else { <STATEMENT> }
+
+ASSIGNMENT_STMT ->
+<IDENTIFIER> = <EXPRESSION>;
+
+ITERATION_STMT ->
+while (<CONDITIONAL_EXPRESSION>) { <STATEMENT> }
+
+---------------------------------------------------------------------------------------------------------------------------------------------------

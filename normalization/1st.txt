@@ -4,19 +4,24 @@ S -> <FUNCTION> <MAIN>
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 FUNCTION ->
-function <IDENTIFIER> (<ARGUMENTS>):<DATATYPE> { <STATEMENT> } <FUNCTION> | ^
+function <IDENTIFIER> (<ARGUMENTS>) :<DATATYPE> { <STATEMENT> } <FUNCTION>  |
+function <IDENTIFIER> ()            :<DATATYPE> { <STATEMENT> } <FUNCTION>  |
+function <IDENTIFIER> (<ARGUMENTS>) :<DATATYPE> { <STATEMENT> }             |
+function <IDENTIFIER> ()            :<DATATYPE> { <STATEMENT> }
 
 MAIN ->
 function main (): int { <STATEMENT> }
 
 ARGUMENTS ->
-<IDENTIFIER>: <DATATYPE> | <IDENTIFIER>: <DATATYPE>, <ARGUMENTS> | ^
+<IDENTIFIER>: <DATATYPE> |
+<IDENTIFIER>: <DATATYPE>, <ARGUMENTS>
 
 PARAMS ->
-<EXPRESSION> | <EXPRESSION>, <PARAMS> | ^
+<EXPRESSION> |
+<EXPRESSION>, <PARAMS>
 
 RETURN ->
-return <EXPRESSION>; | ^
+return <EXPRESSION>;
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -50,7 +55,8 @@ DIRECTION ->
 left | right | front | back
 
 INVOKE ->
-invoke <IDENTIFIER>(<PARAMS>);
+invoke <IDENTIFIER>(<PARAMS>); |
+invoke <IDENTIFIER>();
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -58,7 +64,8 @@ CONST_DECLARATION ->
 const <CONST_DECLARATION_LIST>;
 
 CONST_DECLARATION_LIST ->
-<CONST_DECLARATION_INIT> | <CONST_DECLARATION_INIT>, <CONST_DECLARATION_LIST>
+<CONST_DECLARATION_INIT> |
+<CONST_DECLARATION_INIT>, <CONST_DECLARATION_LIST>
 
 CONST_DECLARATION_INIT ->
 <IDENTIFIER>: <DATATYPE> = <EXPRESSION>
@@ -67,18 +74,20 @@ VAR_DECLARATION ->
 var <VAR_DECLARATION_LIST>;
 
 VAR_DECLARATION_LIST ->
-<VAR_DECLARATION_INIT> | <VAR_DECLARATION_INIT>, <VAR_DECLARATION_LIST>
+<VAR_DECLARATION_INIT> |
+<VAR_DECLARATION_INIT>, <VAR_DECLARATION_LIST>
 
 VAR_DECLARATION_INIT ->
-<IDENTIFIER>: <DATATYPE> = <EXPRESSION> | <IDENTIFIER>: <DATATYPE>
+<IDENTIFIER>: <DATATYPE> = <EXPRESSION> |
+<IDENTIFIER>: <DATATYPE>
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 MOVE (builtin function that receives direction and ms) o DIRECTION ->
-invoke move(<TERM>, <TERM>)
+invoke move(<EXPRESSION>, <EXPRESSION>);
 
 IS_CLEAR (builtin function that receives direction to check) ->
-invoke is_clear(<TERM>, <TERM>)
+invoke is_clear(<EXPRESSION>, <EXPRESSION>);
 
 GET_COLOR ->
 invoke getcolor();
@@ -92,25 +101,39 @@ TERM ->
 <FACTOR> | <FACTOR> <MULTIPLICATION_OPERATOR> <FACTOR>
 
 FACTOR ->
-<SUM_OPERATOR> <INTEGER> | <SUM_OPERATOR> <FLOAT> | <SUM_OPERATOR> <IDENTIFIER> | <SUM_OPERATOR> <INVOKE> | <SUM_OPERATOR> (<ARITHMETIC_EXPRESSION>)
-| <INTEGER> | <FLOAT> | <IDENTIFIER> | <INVOKE> | (<ARITHMETIC_EXPRESSION>)
+<SUM_OPERATOR> <INTEGER>                    |
+<SUM_OPERATOR> <FLOAT>                      |
+<SUM_OPERATOR> <IDENTIFIER>                 |
+<SUM_OPERATOR> <INVOKE>                     |
+<SUM_OPERATOR> (<ARITHMETIC_EXPRESSION>)    |
+<INTEGER>                                   |
+<FLOAT>                                     |
+<IDENTIFIER>                                |
+<INVOKE>                                    |
+(<ARITHMETIC_EXPRESSION>)
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 EXPRESSION ->
-<CONDITIONAL_EXPRESSION> | <ARITHMETIC_EXPRESSION> | <DIRECTION> | <COLOR>
+<CONDITIONAL_EXPRESSION>    |
+<ARITHMETIC_EXPRESSION>     |
+<DIRECTION>                 |
+<COLOR>
 
 ARITHMETIC_EXPRESSION ->
-<TERM> | <TERM> <SUM_OPERATOR> <TERM>
+<TERM> |
+<TERM> <SUM_OPERATOR> <TERM>
 
 RELATIONAL_EXPRESSION ->
 <TERM> <RELATION_OPERATOR> <TERM> 
 
 OR_CONDITIONAL_EXPRESSION ->
-<RELATIONAL_EXPRESSION> | <RELATIONAL_EXPRESSION> || <RELATIONAL_EXPRESSION>
+<RELATIONAL_EXPRESSION> |
+<RELATIONAL_EXPRESSION> || <RELATIONAL_EXPRESSION>
 
-<CONDITIONAL_EXPRESSION> ->
-<OR_CONDITIONAL_EXPRESSION> | <OR_CONDITIONAL_EXPRESSION> && <OR_CONDITIONAL_EXPRESSION>
+CONDITIONAL_EXPRESSION ->
+<OR_CONDITIONAL_EXPRESSION> |
+<OR_CONDITIONAL_EXPRESSION> && <OR_CONDITIONAL_EXPRESSION>
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -129,22 +152,29 @@ CONDITIONAL_OPERATOR ->
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 STATEMENT ->
-<DECLARATION_STMT> <STATEMENT> | <ASSIGNMENT_STMT> <STATEMENT> | <CONDITIONAL_STMT> <STATEMENT> | <ITERATION_STMT> <STATEMENT>
-| <INVOKE_STMT> <STATEMENT> | <BUILTIN_FUNCTION> <STATEMENT> | <RETURN> | <STATEMENT>
+<DECLARATION_STMT> <STATEMENT>  | <DECLARATION_STMT>    |
+<ASSIGNMENT_STMT> <STATEMENT>   | <ASSIGNMENT_STMT>     |
+<CONDITIONAL_STMT> <STATEMENT>  | <CONDITIONAL_STMT>    |
+<ITERATION_STMT> <STATEMENT>    | <ITERATION_STMT>      |
+<INVOKE_STMT> <STATEMENT>       | <INVOKE_STMT>         |
+<BUILTIN_FUNCTION> <STATEMENT>  | <BUILTIN_FUNCTION>    |
+<RETURN> <STATEMENT>            | <RETURN>              | <STATEMENT>
 
 IF_CONDITIONAL_STMT ->
-if (<<CONDITIONAL_EXPRESSION>>) { <STATEMENT> }
+if (<CONDITIONAL_EXPRESSION>) { <STATEMENT> }
 
 DECLARATION_STMT
-<VAR_DECLARATION> | <CONST_DECLARATION>
+<VAR_DECLARATION> |
+<CONST_DECLARATION>
 
 CONDITIONAL_STMT ->
-<IF_CONDITIONAL_STMT> | <IF_CONDITIONAL_STMT> else { <STATEMENT> }
+<IF_CONDITIONAL_STMT> |
+<IF_CONDITIONAL_STMT> else { <STATEMENT> }
 
 ASSIGNMENT_STMT ->
 <IDENTIFIER> = <EXPRESSION>;
 
 ITERATION_STMT ->
-while (<<CONDITIONAL_EXPRESSION>>) { <STATEMENT> }
+while (<CONDITIONAL_EXPRESSION>) { <STATEMENT> }
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
