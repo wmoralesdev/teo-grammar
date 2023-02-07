@@ -16,7 +16,7 @@ PARAMS ->
 <EXPRESSION> | <EXPRESSION>, <PARAMS> | ^
 
 RETURN ->
-return <EXPRESSION>; | ^
+return <EXPRESSION>; | return; | ^
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -75,15 +75,15 @@ VAR_DECLARATION_INIT ->
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 MOVE (builtin function that receives direction and ms) o DIRECTION ->
-invoke move(<TERM>, <TERM>)
+invoke move(<TERM>, <TERM>);
 
 IS_CLEAR (builtin function that receives direction to check) ->
-invoke is_clear(<TERM>, <TERM>)
+invoke is_clear(<TERM>, <TERM>);
 
 GET_COLOR ->
 invoke getcolor();
 
-BUILTIN_FUNCTION ->
+BUILTIN_FUNCTION -> PUEDE SER ACTION
 <MOVE> | <IS_CLEAR> | <GET_COLOR>
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -93,12 +93,12 @@ TERM ->
 
 FACTOR ->
 <SUM_OPERATOR> <INTEGER> | <SUM_OPERATOR> <FLOAT> | <SUM_OPERATOR> <IDENTIFIER> | <SUM_OPERATOR> <INVOKE> | <SUM_OPERATOR> (<ARITHMETIC_EXPRESSION>)
-| <INTEGER> | <FLOAT> | <IDENTIFIER> | <INVOKE> | (<ARITHMETIC_EXPRESSION>)
+| <INTEGER> | <FLOAT> | <IDENTIFIER> | <INVOKE> | (<ARITHMETIC_EXPRESSION>) | <DIRECTION> | <COLOR>
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 EXPRESSION ->
-<CONDITIONAL_EXPRESSION> | <ARITHMETIC_EXPRESSION> | <DIRECTION> | <COLOR>
+<CONDITIONAL_EXPRESSION> | <ARITHMETIC_EXPRESSION>
 
 ARITHMETIC_EXPRESSION ->
 <TERM> | <TERM> <SUM_OPERATOR> <TERM>
@@ -130,10 +130,10 @@ CONDITIONAL_OPERATOR ->
 
 STATEMENT ->
 <DECLARATION_STMT> <STATEMENT> | <ASSIGNMENT_STMT> <STATEMENT> | <CONDITIONAL_STMT> <STATEMENT> | <ITERATION_STMT> <STATEMENT>
-| <INVOKE_STMT> <STATEMENT> | <BUILTIN_FUNCTION> <STATEMENT> | <RETURN> | <STATEMENT>
+| <INVOKE_STMT> <STATEMENT> | <BUILTIN_FUNCTION> <STATEMENT> | <RETURN> <STATEMENT> | <STATEMENT>
 
 IF_CONDITIONAL_STMT ->
-if (<<CONDITIONAL_EXPRESSION>>) { <STATEMENT> }
+if (<CONDITIONAL_EXPRESSION>) { <STATEMENT> }
 
 DECLARATION_STMT
 <VAR_DECLARATION> | <CONST_DECLARATION>
@@ -145,6 +145,6 @@ ASSIGNMENT_STMT ->
 <IDENTIFIER> = <EXPRESSION>;
 
 ITERATION_STMT ->
-while (<<CONDITIONAL_EXPRESSION>>) { <STATEMENT> }
+while (<CONDITIONAL_EXPRESSION>) { <STATEMENT> }
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
