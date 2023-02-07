@@ -1,14 +1,13 @@
-S' -> <FUNCTION> <MAIN> | ^
-S -> <FUNCTION> <MAIN>
-
+S' -> S | ^
+S -> <FUNCTION> <MAIN> | <MAIN>
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 FUNCTION ->
-function <IDENTIFIER> (<ARGUMENTS>) :<DATATYPE> { <STATEMENT> } <FUNCTION>  |
-function <IDENTIFIER> ()            :<DATATYPE> { <STATEMENT> } <FUNCTION>  |
-function <IDENTIFIER> (<ARGUMENTS>) :<DATATYPE> { <STATEMENT> }             |
-function <IDENTIFIER> ()            :<DATATYPE> { <STATEMENT> }
+function <IDENTIFIER> (<ARGUMENTS>):<DATATYPE> { <STATEMENT> } <FUNCTION>   |
+function <IDENTIFIER> ():<DATATYPE> { <STATEMENT> } <FUNCTION>              |
+function <IDENTIFIER> (<ARGUMENTS>):<DATATYPE> { <STATEMENT> }              |
+function <IDENTIFIER> ():<DATATYPE> { <STATEMENT> }
 
 MAIN ->
 function main (): int { <STATEMENT> }
@@ -22,7 +21,8 @@ PARAMS ->
 <EXPRESSION>, <PARAMS>
 
 RETURN ->
-return <EXPRESSION>;
+return <EXPRESSION>; |
+return;
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -56,8 +56,7 @@ DIRECTION ->
 left | right | front | back
 
 INVOKE ->
-invoke <IDENTIFIER>(<PARAMS>); |
-invoke <IDENTIFIER>();
+invoke <IDENTIFIER>(<PARAMS>); | invoke <IDENTIFIER>();
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -85,21 +84,27 @@ VAR_DECLARATION_INIT ->
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 MOVE (builtin function that receives direction and ms) o DIRECTION ->
-invoke move(<EXPRESSION>, <EXPRESSION>);
+invoke move(<TERM>, <TERM>);
 
 IS_CLEAR (builtin function that receives direction to check) ->
-invoke is_clear(<EXPRESSION>, <EXPRESSION>);
+invoke is_clear(<TERM>, <TERM>);
 
 GET_COLOR ->
 invoke getcolor();
 
 BUILTIN_FUNCTION ->
-<MOVE> | <IS_CLEAR> | <GET_COLOR>
+invoke move(<ACTION>);      |
+invoke is_clear(<ACTION>);  |
+invoke get_color();
+
+ACTION ->
+<EXPRESSION>, <EXPRESSION>
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 TERM ->
-<FACTOR> | <FACTOR> <MULTIPLICATION_OPERATOR> <FACTOR>
+<FACTOR> |
+<FACTOR> <MULTIPLICATION_OPERATOR> <FACTOR>
 
 FACTOR ->
 <SUM_OPERATOR> <INTEGER>                    |
@@ -111,15 +116,16 @@ FACTOR ->
 <FLOAT>                                     |
 <IDENTIFIER>                                |
 <INVOKE>                                    |
-(<ARITHMETIC_EXPRESSION>)
+(<ARITHMETIC_EXPRESSION>)                   |
+<DIRECTION>                                 |
+<COLOR>                                     |
+<BOOLEAN>
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 EXPRESSION ->
-<CONDITIONAL_EXPRESSION>    |
-<ARITHMETIC_EXPRESSION>     |
-<DIRECTION>                 |
-<COLOR>
+<CONDITIONAL_EXPRESSION> |
+<ARITHMETIC_EXPRESSION>
 
 ARITHMETIC_EXPRESSION ->
 <TERM> |
@@ -132,7 +138,7 @@ OR_CONDITIONAL_EXPRESSION ->
 <RELATIONAL_EXPRESSION> |
 <RELATIONAL_EXPRESSION> || <RELATIONAL_EXPRESSION>
 
-CONDITIONAL_EXPRESSION ->
+<CONDITIONAL_EXPRESSION> ->
 <OR_CONDITIONAL_EXPRESSION> |
 <OR_CONDITIONAL_EXPRESSION> && <OR_CONDITIONAL_EXPRESSION>
 
@@ -153,13 +159,20 @@ CONDITIONAL_OPERATOR ->
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 STATEMENT ->
-<DECLARATION_STMT> <STATEMENT>  | <DECLARATION_STMT>    |
-<ASSIGNMENT_STMT> <STATEMENT>   | <ASSIGNMENT_STMT>     |
-<CONDITIONAL_STMT> <STATEMENT>  | <CONDITIONAL_STMT>    |
-<ITERATION_STMT> <STATEMENT>    | <ITERATION_STMT>      |
-<INVOKE_STMT> <STATEMENT>       | <INVOKE_STMT>         |
-<BUILTIN_FUNCTION> <STATEMENT>  | <BUILTIN_FUNCTION>    |
-<RETURN> <STATEMENT>            | <RETURN>              | <STATEMENT>
+<DECLARATION_STMT>              |
+<ASSIGNMENT_STMT>               |
+<CONDITIONAL_STMT>              |
+<ITERATION_STMT>                |
+<INVOKE>                        |
+<BUILTIN_FUNCTION>              |
+<RETURN>                        |
+<DECLARATION_STMT> <STATEMENT>  |
+<ASSIGNMENT_STMT> <STATEMENT>   |
+<CONDITIONAL_STMT> <STATEMENT>  |
+<ITERATION_STMT> <STATEMENT>    |
+<INVOKE> <STATEMENT>            |
+<BUILTIN_FUNCTION> <STATEMENT>  |
+<RETURN> <STATEMENT>
 
 IF_CONDITIONAL_STMT ->
 if (<CONDITIONAL_EXPRESSION>) { <STATEMENT> }

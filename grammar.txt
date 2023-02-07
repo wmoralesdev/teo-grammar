@@ -83,8 +83,11 @@ invoke is_clear(<TERM>, <TERM>);
 GET_COLOR ->
 invoke getcolor();
 
-BUILTIN_FUNCTION -> PUEDE SER ACTION
-<MOVE> | <IS_CLEAR> | <GET_COLOR>
+BUILTIN_FUNCTION ->
+invoke move(<ACTION>); | invoke is_clear(<ACTION>); | invoke get_color();
+
+ACTION ->
+<EXPRESSION>, <EXPRESSION>
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -130,7 +133,7 @@ CONDITIONAL_OPERATOR ->
 
 STATEMENT ->
 <DECLARATION_STMT> <STATEMENT> | <ASSIGNMENT_STMT> <STATEMENT> | <CONDITIONAL_STMT> <STATEMENT> | <ITERATION_STMT> <STATEMENT>
-| <INVOKE_STMT> <STATEMENT> | <BUILTIN_FUNCTION> <STATEMENT> | <RETURN> <STATEMENT> | <STATEMENT>
+| <INVOKE> <STATEMENT> | <BUILTIN_FUNCTION> <STATEMENT> | <RETURN> <STATEMENT> | ^
 
 IF_CONDITIONAL_STMT ->
 if (<CONDITIONAL_EXPRESSION>) { <STATEMENT> }

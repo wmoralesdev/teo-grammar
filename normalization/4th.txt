@@ -1,14 +1,14 @@
-S' -> <FUNCTION> <MAIN> | ^
-S -> <FUNCTION> <MAIN>
-
+S' -> S | ^
+S -> <FUNCTION> <MAIN> |
+function main (): int { <STATEMENT> }
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 FUNCTION ->
-function <IDENTIFIER> (<ARGUMENTS>) :<DATATYPE> { <STATEMENT> } <FUNCTION>  |
-function <IDENTIFIER> ()            :<DATATYPE> { <STATEMENT> } <FUNCTION>  |
-function <IDENTIFIER> (<ARGUMENTS>) :<DATATYPE> { <STATEMENT> }             |
-function <IDENTIFIER> ()            :<DATATYPE> { <STATEMENT> }
+function <IDENTIFIER> (<ARGUMENTS>):<DATATYPE> { <STATEMENT> } <FUNCTION>   |
+function <IDENTIFIER> ():<DATATYPE> { <STATEMENT> } <FUNCTION>              |
+function <IDENTIFIER> (<ARGUMENTS>):<DATATYPE> { <STATEMENT> }              |
+function <IDENTIFIER> ():<DATATYPE> { <STATEMENT> }
 
 MAIN ->
 function main (): int { <STATEMENT> }
@@ -18,11 +18,30 @@ ARGUMENTS ->
 <IDENTIFIER>: <DATATYPE>, <ARGUMENTS>
 
 PARAMS ->
-<EXPRESSION> |
+<TERM> <RELATION_OPERATOR> <TERM>                           |
+<RELATIONAL_EXPRESSION> || <RELATIONAL_EXPRESSION>          |
+<OR_CONDITIONAL_EXPRESSION> && <OR_CONDITIONAL_EXPRESSION>  |
+<SUM_OPERATOR> <INTEGER>                                    |
+<SUM_OPERATOR> <FLOAT>                                      |
+<SUM_OPERATOR> <IDENTIFIER>                                 |
+<SUM_OPERATOR> <INVOKE>                                     |
+<SUM_OPERATOR> (<ARITHMETIC_EXPRESSION>)                    |
+[0-9]+                                                      |
+[0-9]+.[0-9]+                                               |
+^[A-Za-z]+(?:[_][A-Za-z]+)*(?:[_][0-9]+)*$                  |
+invoke <IDENTIFIER>(<PARAMS>);                              |
+invoke <IDENTIFIER>();                                      |
+(<ARITHMETIC_EXPRESSION>)                                   |
+left | right | front | back                                 |
+red | green | blue                                          |
+true | false                                                |
+<FACTOR> <MULTIPLICATION_OPERATOR> <FACTOR>                 |
+<TERM> <SUM_OPERATOR> <TERM>                                |
 <EXPRESSION>, <PARAMS>
 
 RETURN ->
-return <EXPRESSION>;
+return <EXPRESSION>; |
+return;
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -42,15 +61,6 @@ INTEGER ->
 
 FLOAT ->
 [0-9]+.[0-9]+
-
-BOOLEAN ->
-true | false
-
-COLOR ->
-red | green | blue
-
-DIRECTION ->
-left | right | front | back
 
 INVOKE ->
 invoke <IDENTIFIER>(<PARAMS>); |
@@ -72,8 +82,8 @@ VAR_DECLARATION ->
 var <VAR_DECLARATION_LIST>;
 
 VAR_DECLARATION_LIST ->
-<IDENTIFIER>: <DATATYPE> = <EXPRESSION>     |
-<IDENTIFIER>: <DATATYPE>                    |
+<IDENTIFIER>: <DATATYPE> = <EXPRESSION> |
+<IDENTIFIER>: <DATATYPE>                |
 <VAR_DECLARATION_INIT>, <VAR_DECLARATION_LIST>
 
 VAR_DECLARATION_INIT ->
@@ -82,48 +92,48 @@ VAR_DECLARATION_INIT ->
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
-MOVE (builtin function that receives direction and ms) o DIRECTION ->
-invoke move(<EXPRESSION>, <EXPRESSION>);
-
-IS_CLEAR (builtin function that receives direction to check) ->
-invoke is_clear(<EXPRESSION>, <EXPRESSION>);
-
-GET_COLOR ->
-invoke get_color();
-
 BUILTIN_FUNCTION ->
-invoke move(<EXPRESSION>, <EXPRESSION>);        |
-invoke is_clear(<EXPRESSION>, <EXPRESSION>);    |
+invoke move(<ACTION>);      |
+invoke is_clear(<ACTION>);  |
 invoke get_color();
+
+ACTION ->
+<EXPRESSION>, <EXPRESSION>
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 TERM ->
-<SUM_OPERATOR> <INTEGER>                    |
-<SUM_OPERATOR> <FLOAT>                      |
-<SUM_OPERATOR> <IDENTIFIER>                 |
-<SUM_OPERATOR> <INVOKE>                     |
-<SUM_OPERATOR> (<ARITHMETIC_EXPRESSION>)    |
-[0-9]+                                      |
-[0-9]+.[0-9]+                               |
-^[A-Za-z]+(?:[_][A-Za-z]+)*(?:[_][0-9]+)*$  |
-invoke <IDENTIFIER>(<PARAMS>);              |
-invoke <IDENTIFIER>();                      |
-(<ARITHMETIC_EXPRESSION>)                   |
+<SUM_OPERATOR> <INTEGER>                                    |
+<SUM_OPERATOR> <FLOAT>                                      |
+<SUM_OPERATOR> <IDENTIFIER>                                 |
+<SUM_OPERATOR> <INVOKE>                                     |
+<SUM_OPERATOR> (<ARITHMETIC_EXPRESSION>)                    |
+[0-9]+                                                      |
+[0-9]+.[0-9]+                                               |
+^[A-Za-z]+(?:[_][A-Za-z]+)*(?:[_][0-9]+)*$                  |
+invoke <IDENTIFIER>(<PARAMS>);                              |
+invoke <IDENTIFIER>();                                      |
+(<ARITHMETIC_EXPRESSION>)                                   |
+left | right | front | back                                 |
+red | green | blue                                          |
+true | false                                                |
 <FACTOR> <MULTIPLICATION_OPERATOR> <FACTOR>
 
 FACTOR ->
-<SUM_OPERATOR> <INTEGER>                    |
-<SUM_OPERATOR> <FLOAT>                      |
-<SUM_OPERATOR> <IDENTIFIER>                 |
-<SUM_OPERATOR> <INVOKE>                     |
-<SUM_OPERATOR> (<ARITHMETIC_EXPRESSION>)    |
-[0-9]+                                      |
-[0-9]+.[0-9]+                               |
-^[A-Za-z]+(?:[_][A-Za-z]+)*(?:[_][0-9]+)*$  |
-invoke <IDENTIFIER>(<PARAMS>);              |
-invoke <IDENTIFIER>();                      |
-(<ARITHMETIC_EXPRESSION>)                   |
+<SUM_OPERATOR> <INTEGER>                                    |
+<SUM_OPERATOR> <FLOAT>                                      |
+<SUM_OPERATOR> <IDENTIFIER>                                 |
+<SUM_OPERATOR> <INVOKE>                                     |
+<SUM_OPERATOR> (<ARITHMETIC_EXPRESSION>)                    |
+[0-9]+                                                      |
+[0-9]+.[0-9]+                                               |
+^[A-Za-z]+(?:[_][A-Za-z]+)*(?:[_][0-9]+)*$                  |
+invoke <IDENTIFIER>(<PARAMS>);                              |
+invoke <IDENTIFIER>();                                      |
+(<ARITHMETIC_EXPRESSION>)                                   |
+left | right | front | back                                 |
+red | green | blue                                          |
+true | false
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -142,29 +152,28 @@ EXPRESSION ->
 invoke <IDENTIFIER>(<PARAMS>);                              |
 invoke <IDENTIFIER>();                                      |
 (<ARITHMETIC_EXPRESSION>)                                   |
+left | right | front | back                                 |
+red | green | blue                                          |
+true | false                                                |
 <FACTOR> <MULTIPLICATION_OPERATOR> <FACTOR>                 |
-<TERM> <SUM_OPERATOR> <TERM>                                |
-left                                                        |
-right                                                       |
-front                                                       |
-back                                                        |
-red                                                         |
-green                                                       |
-blue
+<TERM> <SUM_OPERATOR> <TERM>
 
 ARITHMETIC_EXPRESSION ->
-<SUM_OPERATOR> <INTEGER>                    |
-<SUM_OPERATOR> <FLOAT>                      |
-<SUM_OPERATOR> <IDENTIFIER>                 |
-<SUM_OPERATOR> <INVOKE>                     |
-<SUM_OPERATOR> (<ARITHMETIC_EXPRESSION>)    |
-[0-9]+                                      |
-[0-9]+.[0-9]+                               |
-^[A-Za-z]+(?:[_][A-Za-z]+)*(?:[_][0-9]+)*$  |
-invoke <IDENTIFIER>(<PARAMS>);              |
-invoke <IDENTIFIER>();                      |
-(<ARITHMETIC_EXPRESSION>)                   |
-<FACTOR> <MULTIPLICATION_OPERATOR> <FACTOR> |
+<SUM_OPERATOR> <INTEGER>                                    |
+<SUM_OPERATOR> <FLOAT>                                      |
+<SUM_OPERATOR> <IDENTIFIER>                                 |
+<SUM_OPERATOR> <INVOKE>                                     |
+<SUM_OPERATOR> (<ARITHMETIC_EXPRESSION>)                    |
+[0-9]+                                                      |
+[0-9]+.[0-9]+                                               |
+^[A-Za-z]+(?:[_][A-Za-z]+)*(?:[_][0-9]+)*$                  |
+invoke <IDENTIFIER>(<PARAMS>);                              |
+invoke <IDENTIFIER>();                                      |
+(<ARITHMETIC_EXPRESSION>)                                   |
+left | right | front | back                                 |
+red | green | blue                                          |
+true | false                                                |
+<FACTOR> <MULTIPLICATION_OPERATOR> <FACTOR>                 |
 <TERM> <SUM_OPERATOR> <TERM>
 
 RELATIONAL_EXPRESSION ->
@@ -174,7 +183,7 @@ OR_CONDITIONAL_EXPRESSION ->
 <TERM> <RELATION_OPERATOR> <TERM> |
 <RELATIONAL_EXPRESSION> || <RELATIONAL_EXPRESSION>
 
-CONDITIONAL_EXPRESSION ->
+<CONDITIONAL_EXPRESSION> ->
 <TERM> <RELATION_OPERATOR> <TERM>                   |
 <RELATIONAL_EXPRESSION> || <RELATIONAL_EXPRESSION>  |
 <OR_CONDITIONAL_EXPRESSION> && <OR_CONDITIONAL_EXPRESSION>
@@ -190,31 +199,29 @@ SUM_OPERATOR ->
 MULTIPLICATION_OPERATOR ->
 / | * | %
 
-CONDITIONAL_OPERATOR ->
-|| | &&
-
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 STATEMENT ->
-<DECLARATION_STMT> <STATEMENT>                      |
 var <VAR_DECLARATION_LIST>;                         |
 const <CONST_DECLARATION_LIST>;                     |
-<ASSIGNMENT_STMT> <STATEMENT>                       |
 <IDENTIFIER> = <EXPRESSION>;                        |
-<CONDITIONAL_STMT> <STATEMENT>                      |
 if (<CONDITIONAL_EXPRESSION>) { <STATEMENT> }       |
 <IF_CONDITIONAL_STMT> else { <STATEMENT> }          |
-<ITERATION_STMT> <STATEMENT>                        |
 while (<CONDITIONAL_EXPRESSION>) { <STATEMENT> }    |
-<INVOKE> <STATEMENT>                                |
 invoke <IDENTIFIER>(<PARAMS>);                      |
 invoke <IDENTIFIER>();                              |
-<BUILTIN_FUNCTION> <STATEMENT>                      |
-invoke move(<EXPRESSION>, <EXPRESSION>);            |
-invoke is_clear(<EXPRESSION>, <EXPRESSION>);        |
+invoke move(<ACTION>);                              |
+invoke is_clear(<ACTION>);                          |
 invoke get_color();                                 |
-<RETURN> <STATEMENT>                                |
 return <EXPRESSION>;                                |
+return;                                             |
+<DECLARATION_STMT> <STATEMENT>                      |
+<ASSIGNMENT_STMT> <STATEMENT>                       |
+<CONDITIONAL_STMT> <STATEMENT>                      |
+<ITERATION_STMT> <STATEMENT>                        |
+<INVOKE> <STATEMENT>                                |
+<BUILTIN_FUNCTION> <STATEMENT>                      |
+<RETURN> <STATEMENT>
 
 IF_CONDITIONAL_STMT ->
 if (<CONDITIONAL_EXPRESSION>) { <STATEMENT> }
